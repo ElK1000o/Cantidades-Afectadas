@@ -50,7 +50,7 @@ if archivo is not None:
     try:
         df = pd.read_excel(archivo)
 
-        columnas_necesarias = {'Código Producto', 'Nombre producto', 'Cantidad almacenada en bodega', 'Unidad de medida', 'Cantidad afectada cliente', 'Unidad de medida2'}
+        columnas_necesarias = {'Código Producto', 'Nombre producto', 'Cantidad almacenada en bodega', 'Unidad de medida', 'Cantidad afectada cliente', 'Unidad de medida2', 'Lote desviación'}
         if not columnas_necesarias.issubset(df.columns):
             st.error(f"Faltan columnas obligatorias: {columnas_necesarias}")
         else:
@@ -59,7 +59,7 @@ if archivo is not None:
             df['Cantidad_Afectada_UM_Unidades'] = df.apply(lambda row: convertir_a_unidades(row['Cantidad afectada cliente'], row['Unidad de medida2']), axis=1)
 
             # Agrupar
-            resumen = df.groupby(['Código Producto']).agg({
+            resumen = df.groupby(['Código Producto', 'Lote desviación']).agg({
                 'Cantidad_UM_Unidades': 'sum',
                 'Cantidad_Afectada_UM_Unidades': 'sum'
             }).reset_index()
